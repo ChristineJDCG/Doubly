@@ -35,22 +35,19 @@ public class OLinkedList <T>{
     //working
     public void addAtTail (T item){
         Node newNode = new Node<T>(item);
-        Node tail = head;
         newNode.nextNode=null;
 
-        //sets new node as head if empty
         if(head == null){
             head = newNode;
         }else {
-            while (tail.nextNode != null) {
-                tail = tail.getNextNode();
-            }
+            Node<T> tail = getTail(head);
             tail.setNextNode(newNode);
             newNode.setPrevNode(tail);
         }
         size++;
     }
-//
+
+//working
     public void addAtIndex(T item, int index) throws IndexOutOfBoundsException {
         if (index == 0){
             addBeforeHead(item);
@@ -73,6 +70,7 @@ public class OLinkedList <T>{
 
     }
 
+    //working
     public Node<T> getNode (int index) {
         if (index < 0 || index > this.size - 1) {
             throw new IndexOutOfBoundsException("Index cannot be found");
@@ -92,7 +90,8 @@ public class OLinkedList <T>{
         return pointerNode;
     }
 
-
+//working
+    //get Tail of a node
     public Node<T> getTail (Node<T> givenNode){
         if (givenNode != null){
             Node<T> tail = givenNode;
@@ -106,43 +105,57 @@ public class OLinkedList <T>{
     }
 
 
-    public void addAfterGivenNode ( Node <T> givenNode, T item){
+//    public void addAfterGivenNode ( Node <T> givenNode, T item){
+//
+//        if (givenNode==null){
+//            System.out.println("Chosen node is empty");
+//            return;
+//        }
+//        //declare item as node
+//    //    Node <T> newNode = new Node<T>(item);
+//        int index = getIndex(givenNode.getData());
+//        addAtIndex(item,index+1);
+//
+////        newNode.setNextNode(givenNode.getNextNode());
+////        givenNode.setNextNode(newNode);
+////        newNode.setPrevNode(givenNode);
+////
+//////        if (newNode.getNextNode()==null){
+//////            newNode.getNextNode().setPrevNode(newNode);
+//////        }
+//
+//    }
 
-        if (givenNode==null){
-            System.out.println("Chosen node is empty");
-            return;
-        }
-        //declare item as node
-        Node <T> newNode = new Node<T>(item);
-        newNode.setNextNode(givenNode.getNextNode());
-        givenNode.setNextNode(newNode);
-        newNode.setPrevNode(givenNode);
 
-        if (newNode.getNextNode()==null){
-            newNode.getNextNode().setPrevNode(newNode);
-        }
-        size++;
-    }
-
+    //null pointer exception
     public void removeHead (){
-        if(head == null){
-            System.out.println("List is empty");
-            return;
+        Node<T> tmpNode = this.head.getNextNode();
+        if (tmpNode!=null){
+            tmpNode.setPrevNode(null);
         }
-        head=head.getNextNode();
+        this.head=tmpNode;
         size--;
     }
 
+    //nullpointer exception
     public void removeTail(){
-        if(head==null){
-            System.out.println("List is empty");
+        Node<T> tail = getTail(head);
+        Node<T> tmp = tail.getPrevNode();
+        tail.setNextNode(null);
+        size--;
+    }
+
+    //head is null
+    public void removeAtIndex (int index){
+        if (this.head == null){
             return;
         }
-        Node tail = head;
-        while (tail.getNextNode()!=null){
-            tail=tail.getNextNode();
+        if (index < 0|| index >= this.size){
+            throw new IndexOutOfBoundsException("Index not Applicable");
         }
-        tail=null;
+        Node <T> tmp = getNode(index);
+        (tmp.getNextNode()).setPrevNode(tmp.getPrevNode());
+        (tmp.getPrevNode()).setNextNode(tmp.getNextNode());
         size--;
     }
 
@@ -172,20 +185,6 @@ public class OLinkedList <T>{
         return this.size;
   }
 
-  public int getIndex (T item){
-        int count = 0;
-        if (head==null){
-            System.out.println("The list is empty");
-        return  -1;
-        }
-        Node newNode = new Node <T> (item);
-        while (head != newNode){
-            head=head.nextNode;
-            count++;
-        }
-        return count;
-  }
-
   //incomplete
   public ArrayList<T> toArray () {
      ArrayList<T> inArray = new ArrayList <T>();
@@ -196,6 +195,7 @@ public class OLinkedList <T>{
     return inArray;
     }
 
+@Override
     public String toString() {
 
        StringBuffer str = new StringBuffer();
