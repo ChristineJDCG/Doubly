@@ -1,43 +1,17 @@
-import java.util.ArrayList;
+public class OLinkedList <T> {
+    private int size;
+    private Node<T> head;
 
-/*
- *Names: GONZALES, Christine Joy D.
- *       TAPEC, Deanne Ruth L.
- *       TAYABA, Andrea Gale M.
- *CLASSCODE & Schedule: 9391 9:30-11:00 TF
- *Start Date: August 23, 2019
- *Instructor: Roderick Makil
- *
- *Problem:
- *      Write a program that
- *
- *Algorithm:
- **/
-public class OLinkedList <T>{
-    int size;
-    Node<T> head;
-    //Node tail;
-
-
-    //working
-    //add a node at the beginning
-    public void addBeforeHead (T item){
-        Node <T> newNode = new Node<T>(item);
-        if(head != null){
-            head.prevNode= newNode;
-            newNode.setNextNode(head);
-            this.head=newNode;
-        }
-        head = newNode;
-        size++;
+    public int getSize (){
+        return size;
     }
 
-    //working
     public void addAtTail (T item){
-        Node newNode = new Node<T>(item);
-        newNode.nextNode=null;
-
-        if(head == null){
+        if (item == null){
+            return;
+        }
+        Node<T> newNode = new Node<T>(item);
+        if (head == null){
             head = newNode;
         }else {
             Node<T> tail = getTail(head);
@@ -47,164 +21,164 @@ public class OLinkedList <T>{
         size++;
     }
 
-//working
-    public void addAtIndex(T item, int index) throws IndexOutOfBoundsException {
-        if (index == 0){
-            addBeforeHead(item);
+    public void addAsHead (T item){
+        if (item == null){
             return;
         }
-
-        if (index == this.size){
-            addAtTail(item);
+        Node <T> newNode = new Node<T>(item);
+        if (head == null){
+            head = newNode;
+        }else{
+            head.setPrevNode(newNode);
+            newNode.setNextNode(head);
+            head = newNode;
         }
-        else if (index < this.size) {
-            Node<T> newNode = new Node<T>(item);
-            newNode.setPrevNode(getNode(index).getPrevNode());
-            newNode.setNextNode(getNode(index));
-            (getNode(index).getPrevNode()).setNextNode(newNode);
-            getNode(index).setPrevNode(newNode);
-            size++;
-        }else {
-            throw new IndexOutOfBoundsException("Index not applicable");
-        }
-
+        size++;
     }
 
-    //working
-    public Node<T> getNode (int index) {
-        if (index < 0 || index > this.size - 1) {
-            throw new IndexOutOfBoundsException("Index cannot be found");
-        }
-        if (index == 0) {
-            return this.head;
-        }
-        if (index == this.size - 1) {
-            return getTail(this.head);
-        }
-        int pointer = 0;
-        Node<T> pointerNode = this.head;
-        while (pointer < index){
-        pointerNode=pointerNode.getNextNode();
-        pointer++;
-        }
-        return pointerNode;
-    }
-
-//working
-    //get Tail of a node
-    public Node<T> getTail (Node<T> givenNode){
-        if (givenNode != null){
-            Node<T> tail = givenNode;
-            if (givenNode.getNextNode() != null){
-                return getTail(tail.getNextNode());
+    public void addAtIndex (int index, T item){
+        try {
+            if (item == null) {
+                return;
+            }
+            if (index == 0){
+                addAsHead(item);
+                return;
+            }
+            if (index == size-1){
+                addAtTail(item);
+                return;
             } else {
+                Node<T> newNode = new Node<T>(item);
+                Node<T> nextOfNew = getNode(index);
+                Node<T> prevOfNew =  nextOfNew.getPrevNode();
+                prevOfNew.setNextNode(newNode);
+                newNode.setPrevNode(prevOfNew);
+                nextOfNew.setPrevNode(newNode);
+                newNode.setNextNode(nextOfNew);
+               size++;
+            }
+        }catch (IndexOutOfBoundsException e){
+            System.out.println("Index not applicable");
+        }
+    }
+
+    public  Node<T> getTail (Node<T> givenNode){
+        if (givenNode != null){
+            Node <T> tail = givenNode;
+            if (tail.getNextNode()!=null){
+                return getTail(tail.getNextNode());
+            }else {
                 return tail;
             }
         }
         return null;
     }
 
-
-//    public void addAfterGivenNode ( Node <T> givenNode, T item){
-//
-//        if (givenNode==null){
-//            System.out.println("Chosen node is empty");
-//            return;
-//        }
-//        //declare item as node
-//    //    Node <T> newNode = new Node<T>(item);
-//        int index = getIndex(givenNode.getData());
-//        addAtIndex(item,index+1);
-//
-////        newNode.setNextNode(givenNode.getNextNode());
-////        givenNode.setNextNode(newNode);
-////        newNode.setPrevNode(givenNode);
-////
-//////        if (newNode.getNextNode()==null){
-//////            newNode.getNextNode().setPrevNode(newNode);
-//////        }
-//
-//    }
-
-
-    //null pointer exception
-    public void removeHead (){
-        Node<T> tmpNode = this.head.getNextNode();
-        if (tmpNode!=null){
-            tmpNode.setPrevNode(null);
+    public Node<T> getNode (int index){
+        if (index < 0 || index >= this.size -1){
+            throw new IndexOutOfBoundsException("Index not applicable");
         }
-        this.head=tmpNode;
-        size--;
+        if (index == 0){
+            return this.head;
+        }
+        int current = 0;
+        Node <T> currentNode = this.head;
+        while (current <= index){
+            if (current == index){
+                return currentNode;
+            }else {
+                currentNode = currentNode.getNextNode();
+                current++;
+            }
+        }
+        return null;
     }
 
-    //nullpointer exception
-    public void removeTail(){
-        Node<T> tail = getTail(head);
-        Node<T> tmp = tail.getPrevNode();
-        tail.setNextNode(null);
-        size--;
+    public int getIndex (T item){
+        try {
+            if (item == null) {
+                return -1;
+            }
+            int index = 0;
+            Node<T> currentNode = head;
+
+            while (!currentNode.equals(item)) {
+                currentNode = currentNode.getNextNode();
+                index++;
+            }
+            return index;
+        }catch (NullPointerException e){
+            System.out.println("Item not found");
+         return -1;
+        }
     }
 
-    //head is null
+    public void remove (T item){
+        if(item == null){
+            return;
+        }
+        removeAtIndex(getIndex(item));
+    }
+
     public void removeAtIndex (int index){
-        if (this.head == null){
+        if (head == null){
             return;
         }
-        if (index < 0|| index >= this.size){
-            throw new IndexOutOfBoundsException("Index not Applicable");
+        if (index < 0 || index >= this.size){
+            throw new IndexOutOfBoundsException("Index not applicable");
         }
-        Node <T> tmp = getNode(index);
-        (tmp.getNextNode()).setPrevNode(tmp.getPrevNode());
-        (tmp.getPrevNode()).setNextNode(tmp.getNextNode());
+        if (index == 0){
+            Node <T> nextNode = head.getNextNode();
+            if (nextNode != null){
+                nextNode.setPrevNode(null);
+            }
+            head = nextNode;
+        }
+        if (index == this.size-1){
+            Node<T> tail = getTail(head);
+            Node<T> prevNode = tail.getPrevNode();
+            prevNode.setNextNode(null);
+        }
+        else {
+            Node <T> targetNode = getNode(index);
+            Node <T> nextNode = targetNode.getNextNode();
+            Node<T> prevNode = targetNode.getPrevNode();
+            nextNode.setPrevNode(prevNode);
+            prevNode.setNextNode(nextNode);
+        }
         size--;
     }
 
-    public void removeGivenNode(Node givenNode){
-        if (givenNode==null){
-            System.out.println("Chosen node not found");
-            return;
+    public void clear () {
+        head = null;
+        size = 0;
+    }
+
+    public void replace (T old, T item){
+        int index = this.getIndex(old);
+        System.out.println(index);
+        addAtIndex(index,item);
+        remove(old);
+    }
+
+    public void replaceByIndex (int index, T item){
+        addAtIndex(index,item);
+        removeAtIndex(index-1);
+    }
+
+    @Override
+    public String toString (){
+        String inString = "[";
+        Node<T> currentNode = head;
+        while (currentNode != null){
+            inString = inString + currentNode.toString();
+            currentNode = currentNode.getNextNode();
+            if (currentNode != null){
+                inString = inString + ",";
+            }
         }
-        givenNode.getPrevNode().setNextNode(givenNode.getNextNode());
-        givenNode.getPrevNode().setPrevNode(givenNode.getPrevNode());
-        givenNode = null;
-        size--;
-    }
-
-    public void replace (Node givenNode, T item){
-        if (givenNode==null){
-            System.out.println("Chosen node not found");
-            return;
-        }
-        Node newNode = new Node(item);
-        givenNode = newNode;
-
-    }
-
-    //working
-  public int getSize (){
-        return this.size;
-  }
-
-  //incomplete
-  public ArrayList<T> toArray () {
-     ArrayList<T> inArray = new ArrayList <T>();
-    for (int x = 0; x == getSize(); x++ ){
-       // inArray.add(head);
-        head=head.nextNode;
-    }
-    return inArray;
-    }
-
-@Override
-    public String toString() {
-
-       StringBuffer str = new StringBuffer();
-       while (head != null){
-           str.append(head.data+",");
-           head=head.nextNode;
-       }
-        return str.toString();
+        inString = inString + "]";
+        return inString;
     }
 }
-
-

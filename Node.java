@@ -1,60 +1,45 @@
-/*
- *Names: GONZALES, Christine Joy D.
- *       TAPEC, Deanne Ruth L.
- *       TAYABA, Andrea Gale M.
- *CLASSCODE & Schedule: 9391 9:30-11:00 TF
- *Start Date: August 23, 2019
- *Instructor: Roderick Makil
- *
- *Problem:
- *      Write a program that
- *
- *Algorithm:
- **/
+public class Node <T> {
 
-public class Node<T> {
+    private T data;
+    private Node<T> nextNode;
+    private Node<T> prevNode;
 
-	T data;
-	Node<T> nextNode;
-	Node<T> prevNode;
+    public Node (T data){
+        this.data = data;
+    }
+    public T getData() {
+        return data;
+    }
 
-	public Node(T data){
-		this(data,null,null);
-	}
-	public Node(T data,Node<T> nextNode, Node<T>prevNode) {
+    public void setData(T data) {
+        this.data = data;
+    }
+    public Node<T> getNextNode() {
+        return nextNode;
+    }
 
-		this.data = data;
-		this.nextNode=nextNode;
-		this.prevNode=prevNode;
-	}
+    public void setNextNode(Node<T> nextNode) {
+        this.nextNode = nextNode;
+    }
 
-	public T getData() {
-		return data;
-	}
+    public Node<T> getPrevNode() {
+        return prevNode;
+    }
 
-	public void setData(T data) {
-		this.data = data;
-	}
+    public void setPrevNode(Node<T> prevNode) {
+        this.prevNode = prevNode;
+    }
 
-	public Node<T> getNextNode() {
-		return nextNode;
-	}
+    public boolean equals (Object other){
 
-	public void setNextNode(Node<T> nextNode) {
-		this.nextNode = nextNode;
-	}
+        if (this.getData().equals(other)) return  true;
+        else return false;
+    }
 
-	public Node<T> getPrevNode() {
-		return prevNode;
-	}
-
-	public void setPrevNode(Node<T> prevNode) {
-		this.prevNode = prevNode;
-	}
+    @Override
+    public String toString(){
+        return data.toString();
+    }
 
 
-	@Override
-	public String toString() {
-		return data.toString();
-	}
 }
